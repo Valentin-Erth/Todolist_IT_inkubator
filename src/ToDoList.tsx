@@ -4,7 +4,7 @@ type PropsType = {
     newShapka?: string
     tasks: Array<TaskType>
 }
-type TaskType = {
+export type TaskType = {
     id: number
     title: string
     isDone: boolean
