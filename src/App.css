@@ -1,0 +1,10 @@
+.App {
+    padding: 30px;
+    display: flex;
+    /* justify-content: space-around; */
+}
+
+.App>div {
+    margin-right: 50px;
+    margin-top: 50px;
+}
