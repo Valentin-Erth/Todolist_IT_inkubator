@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { TASKS } from './TASKS';
 import { ToDoList } from './ToDoList';
@@ -9,6 +9,8 @@ import { ToDoList } from './ToDoList';
 // -You have 2 arrays. You should create a new component TASKS, where you will render these arrays.
 // -Don't forget to assign types to our data.
 
+export type FilerType = "all" | "active" | "comlited"
+
 
 
 function App() {
@@ -16,7 +18,9 @@ function App() {
         title: "What to do",
         tasks: [
             { taskId: 1, title: " HTML&CSS2", isDone: true },
-            { taskId: 2, title: " JS2", isDone: true }
+            { taskId: 2, title: " JS2", isDone: true },
+            { taskId: 3, title: " React", isDone: true },
+            { taskId: 3, title: " Redux", isDone: false }
         ],
         students: [
             'Jago Wormald1',
@@ -66,75 +70,57 @@ function App() {
             'Ralphie Hebert',
         ]
     }
-    const data2 = {
-        title: "What to learn",
-        tasks: [
-            { taskId: 1, title: " HTML&CSS", isDone: true },
-            { taskId: 2, title: " JS", isDone: false }
-        ],
-        students: [
-            'Rick Kane',
-            'Finnlay Bentley',
-            'Samia North',
-            'Isaac Morton',
-            'Lily-Ann Clifford',
-            'Thalia Park',
-            'Sapphire Cruz',
-            'Cieran Vazquez',
-            'Anya Estes',
-            'Dominika Field',
-            'Rosanna Chung',
-            'Safiyah Davey',
-            'Ryley Beasley',
-            'Kalvin Trejo',
-            'Evie-Mae Farrell',
-            'Juliet Valencia',
-            'Astrid Austin',
-            'Lyle Montgomery',
-            'Nisha Mora',
-            'Kylie Callaghan',
-            'Star Wilks',
-            'Marissa Colley',
-            'Asa Fuller',
-            'Leigh Kemp',
-            'Avleen Dawson',
-            'Sammy Bonilla',
-            'Acacia Becker',
-            'Coral Shepherd',
-            'Melina Molina',
-            'Kiran Bailey',
-            'Clara Escobar',
-            'Alexandru Horn',
-            'Brandon-Lee Mercado',
-            'Elouise Weston',
-            'King Long',
-            'Kerri Searle',
-            'Kanye Hamer',
-            'Elwood Benitez',
-            'Mikail Whitaker',
-            'Bobby Hardy',
-            'Talha Ferry',
-            'Priscilla Landry',
-            'Olivia-Grace Cain',
-            'Kiaan Wallace',
-            'Wesley Padilla90',
-            'Ella-Grace Wooten91',
-            'Kaif Molloy92',
-            'Kamal Broadhurst93',
-            'Bianca Ferrell94',
-            'Micheal Talbot95',
-        ]
+    let [tasks, setTasks] = useState([
+        { id: 1, title: " HTML&CSS2", isDone: true },
+        { id: 2, title: " JS2", isDone: true },
+        { id: 3, title: " React", isDone: true },
+        { id: 4, title: " Redux", isDone: false },
+        { id: 5, title: " Rest API", isDone: false },
+        { id: 6, title: " GraphQL", isDone: false },
+    ])
+    const removeTask = (id: number, myTitile: string) => {
+        let filteredTasks = tasks.filter(el => el.id !== id)
+        setTasks(filteredTasks)
+        console.log(filteredTasks)
     }
-
+    let [filter, SetFilter] = useState<FilerType>('all')
+    let taskForTodolist = tasks// здесь храним отфильрованные таски
+    if (filter === "active") {// теперь мы не можем опечататься
+        taskForTodolist = tasks.filter(el => el.isDone === false)
+    }
+    if (filter === "comlited") {
+        taskForTodolist = tasks.filter(el => el.isDone === true)
+    }
+    const changeFiler = (value: FilerType) => {
+        SetFilter(value)
+    }
     return (
         <div className="App">
-            <TASKS datas={data1} />
-            <TASKS datas={data2} />
+            {/* <TASKS datas={data1} /> */}
+            <ToDoList shapka={"What to learn"}
+                tasks={taskForTodolist}
+                removeTask={removeTask}
+                changeFiler={changeFiler}
+            />
+            <Example />
         </div>
     );
 }
 export default App;
 
+function Example() {
+    // Объявление новой переменной состояния «count»
+    const [count, setCount] = useState(0);
+
+    return (
+        <div>
+            <p>Вы кликнули {count} раз(а)</p>
+            <button onClick={() => setCount(count + 1)}>
+                Нажми на меня
+            </button>
+        </div>
+    );
+}
 
 
 
@@ -161,6 +147,9 @@ export default App;
 
 
 
+function el(value: { taskId: number; title: string; isDone: boolean; }, index: number, array: { taskId: number; title: string; isDone: boolean; }[]): value is { taskId: number; title: string; isDone: boolean; } {
+    throw new Error('Function not implemented.');
+}
 //--------------------------------------------------------------
 // import React from 'react';
 // import './App.css';

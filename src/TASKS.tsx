@@ -1,7 +1,8 @@
 import React from 'react';
-type PropsTypeTask = {
+type TasksPropsType = {
     datas: DataType
 }
+
 type DataType = {
     title: string
     tasks: Array<TaskType>
@@ -13,7 +14,7 @@ type TaskType = {
     isDone: boolean
 }
 
-export const TASKS = (props: PropsTypeTask) => {
+export const TASKS = (props: TasksPropsType) => {
     // debugger;
     return (
         <div>
@@ -23,9 +24,11 @@ export const TASKS = (props: PropsTypeTask) => {
                 <ul>
                     {props.datas.tasks.map(el => {
                         return (
-                            <li><input type="checkbox" checked={el.isDone} />
-                                <span>{el.taskId}</span>
+                            <li key={el.taskId}><input type="checkbox" checked={el.isDone} />
+                                {/* <span>{el.taskId}</span> */}
+                                <button >x</button>
                                 <span>{el.title}</span>
+
                             </li>
                         )
                     })}
