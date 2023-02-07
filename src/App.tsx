@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { TASKS } from './TASKS';
-import { ToDoList } from './ToDoList';
+import { TaskType, ToDoList } from './ToDoList';
 
 
 // Hi Guys!
@@ -70,7 +70,7 @@ function App() {
             'Ralphie Hebert',
         ]
     }
-    let [tasks, setTasks] = useState([
+    let [tasks, setTasks] = useState<Array<TaskType>>([
         { id: 1, title: " HTML&CSS2", isDone: true },
         { id: 2, title: " JS2", isDone: true },
         { id: 3, title: " React", isDone: true },
@@ -78,12 +78,15 @@ function App() {
         { id: 5, title: " Rest API", isDone: false },
         { id: 6, title: " GraphQL", isDone: false },
     ])
+    let [filter, SetFilter] = useState<FilerType>('all')
     const removeTask = (id: number, myTitile: string) => {
         let filteredTasks = tasks.filter(el => el.id !== id)
         setTasks(filteredTasks)
         console.log(filteredTasks)
     }
-    let [filter, SetFilter] = useState<FilerType>('all')
+    const changeFiler = (value: FilerType) => {
+        SetFilter(value)
+    }
     let taskForTodolist = tasks// здесь храним отфильрованные таски
     if (filter === "active") {// теперь мы не можем опечататься
         taskForTodolist = tasks.filter(el => el.isDone === false)
@@ -91,9 +94,7 @@ function App() {
     if (filter === "comlited") {
         taskForTodolist = tasks.filter(el => el.isDone === true)
     }
-    const changeFiler = (value: FilerType) => {
-        SetFilter(value)
-    }
+
     return (
         <div className="App">
             {/* <TASKS datas={data1} /> */}
