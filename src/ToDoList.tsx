@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
-import { FilterValuesType } from './App';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {FilterValuesType} from './App';
 
-type TaskType = {
-    id: number
+export type TaskType = {
+    id: string
     title: string
     isDone: boolean
 }
 
-type PropsType = {
+type TodolistType = {
     title: string
-    tasks: Array<TaskType>
-    removeTask: (taskId: number) => void
+    tasks: TaskType[]
+    removeTask: (taskId: string) => void
     // changeFilter: (value: FilterValuesType) => void
     deleteAllTasks: () => void
+    addTask: (title: string) => void
 }
 
-export function Todolist(props: PropsType) {
+export function Todolist(props: TodolistType) {
+    const [newTaskTitle, setNewTaskTitle] = useState("")
     let [filter, setFilter] = useState<FilterValuesType>("all");
 
     let tasksForTodolist = props.tasks;
-
     if (filter === "active") {
         tasksForTodolist = props.tasks.filter(t => t.isDone === false);
     }
@@ -27,68 +28,73 @@ export function Todolist(props: PropsType) {
         tasksForTodolist = props.tasks.filter(t => t.isDone === true);
     }
     if (filter === "three") {
-        tasksForTodolist = props.tasks.filter(t => t.id < 4);
+        tasksForTodolist = props.tasks.filter((t, i) => i <= 2);
     }
-    function changeFilter(value: FilterValuesType) {
+
+    const changeFilter = (value: FilterValuesType) => {
         setFilter(value);
     }
+    const onNewTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewTaskTitle(e.currentTarget.value)
+    }
+    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.ctrlKey && e.charCode === 13) {
+            props.addTask(newTaskTitle)
+            setNewTaskTitle("")
+        }
+    }
+    const addTask = () => {
+        props.addTask(newTaskTitle)
+        setNewTaskTitle("")
+    }
+    const onAllClickHandler=()=>{changeFilter("all")}
+    const onThreeClickHandler=()=>{changeFilter("three")}
+    const onActiveClickHandler=()=>{changeFilter("active")}
+    const onCompletedClickHandler=()=>{changeFilter("completed")}
     return <div>
         <h3>{props.title}</h3>
         <div>
-            <input />
-            <button>+</button>
+            <input value={newTaskTitle}
+                   onChange={onNewTitleChangeHandler}
+                   onKeyPress={onKeyPressHandler}
+            />
+            <button onClick={addTask}>+
+            </button>
         </div>
         <ul>
             {
-                tasksForTodolist.map(t => <li key={t.id}>
-                    <input type="checkbox" checked={t.isDone} />
+                tasksForTodolist.map(t => {
+                    const onClickHandler=()=>{
+                        props.removeTask(t.id)
+                    }
+                    return(
+                        <li key={t.id}>
+                    <input type="checkbox" checked={t.isDone}/>
                     <span>{t.title}</span>
-                    <button onClick={() => { props.removeTask(t.id) }}>x</button>
-                </li>)
+                    <button onClick={onClickHandler}>x
+                    </button>
+                </li>)})
             }
         </ul>
         <div>
             <button onClick={props.deleteAllTasks}>delete All Tasks</button>
         </div>
         <div>
-            <button onClick={() => { changeFilter("three") }}>
+            <button onClick={onThreeClickHandler}>
                 First three tasks
             </button>
-            <button onClick={() => { changeFilter("all") }}>
+            <button onClick={onAllClickHandler}>
                 All
             </button>
-            <button onClick={() => { changeFilter("active") }}>
+            <button onClick={onActiveClickHandler}>
                 Active
             </button>
-            <button onClick={() => { changeFilter("completed") }}>
+            <button onClick={onCompletedClickHandler}>
                 Completed
             </button>
         </div>
     </div>
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //------------------------------------------------------------------------------------------------
